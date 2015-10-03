@@ -13,20 +13,20 @@ bot.setWebHook(domain+':443/bot'+token);
 
 bot.on('message', function (msg) {
   var chatId = msg.chat.id;
-  if (msg.text == '/morning') {
+  if (msg.text == '/morning' || msg.text == '/morning@NoisyBot') {
     var photo = 'morning.jpg';
     bot.sendPhoto(chatId, photo, {caption: "Noisy bot says HAI!"});
   }
-  else if (msg.text == '/hello') {
+  else if (msg.text == '/hello' || msg.text == '/hello@NoisyBot') {
     bot.sendMessage(chatId, 'HAI guys!', opts);
   }
-  else if (msg.text == '/help') {
+  else if (msg.text == '/help' || msg.text == '/help@NoisyBot') {
     var opts = {
       reply_to_message_id: msg.message_id
     };
-    bot.sendMessage(chatId, 'Type /hello or /morning ðopts');
+    bot.sendMessage(chatId, 'Type /hello or /morning 😁');
   }
-  else if(msg.text =='/psi') {
+  else if(msg.text =='/psi' || msg.text =='/psi@NoisyBot') {
     try{
       http.get({
     host: 'www.nea.gov.sg',
@@ -50,7 +50,7 @@ bot.on('message', function (msg) {
         var north = xpath.select("//region[id='rNO']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
         var avg = xpath.select("//region[id='NRS']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
         //var time = xpath.select("//record/@timestamp",doc);
-        var result = "[Current 3Hr PSI]\nWest : "+west[0].nodeValue+"\nEast : "+east[0].nodeValue+"\nSouth : "+south[0].nodeValue+"\nNorth : "+north[0].nodeValue+"\nCentral : "+central[0].nodeValue+"\n\nNational Avg : "+avg[0].nodeValue;
+        var result = "😷[Current 3Hr PSI] 😷\nWest : "+west[0].nodeValue+"\nEast : "+east[0].nodeValue+"\nSouth : "+south[0].nodeValue+"\nNorth : "+north[0].nodeValue+"\nCentral : "+central[0].nodeValue+"\n\nNational Avg : "+avg[0].nodeValue;
       bot.sendMessage(chatId, result, opts);
       });
 
