@@ -1,0 +1,28 @@
+{
+  "name": "NoisyBot",
+  "version": "1.0.0",
+  "description": "Noisy Bot",
+  "keywords": [
+    "Noisy Bot"
+  ],
+  "author": {
+    "name": "Rey Neo"
+  },
+
+  "engines": {
+    "node": ">= 0.6.0",
+    "npm": ">= 1.0.0"
+  },
+
+  "dependencies": {
+    "node-telegram-bot-api": "~0.12.1",
+    "http":"~0.0.0",
+    "xpath":"~0.0.9",
+    "xmldom":"~0.1.19"
+  },
+  "devDependencies": {},
+  "bundleDependencies": [],
+
+  "private": false,
+  "main": "bot.js"
+}
