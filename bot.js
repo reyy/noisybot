@@ -12,26 +12,27 @@ var bot = new TelegramBot(token, { webHook: { port: port, host: host } });
 bot.setWebHook(domain + ':443/bot' + token);
 
 bot.on('message', function (msg) {
+    var cmd = msg.text.split(" ");
     var chatId = msg.chat.id;
-    if (msg.text == '/morning' || msg.text == '/morning@NoisyBot') {
+    if (cmd[0] == '/morning' || cmd[0] == '/morning@NoisyBot') {
         var photo = 'morning.jpg';
         bot.sendPhoto(chatId, photo, { caption: "Noisy bot says HAI!" });
     }
-    else if (msg.text == '/hello' || msg.text == '/hello@NoisyBot') {
+    else if (cmd[0] == '/hello' || cmd[0] == '/hello@NoisyBot') {
         bot.sendMessage(chatId, 'HAI guys!');
     }
-    else if (msg.text == '/help' || msg.text == '/help@NoisyBot') {
+    else if (cmd[0] == '/help' || cmd[0] == '/help@NoisyBot') {
         var opts = {
             reply_to_message_id: msg.message_id
         };
         bot.sendMessage(chatId, 'Type /hello or /morning 😁');
     }
-    else if (msg.text == '/psi' || msg.text == '/psi@NoisyBot') {
+    else if (cmd[0] == '/psi' || cmd[0] == '/psi@NoisyBot') {
         try {
             loadPSI(chatId);
         }
         catch (e) {
-            bot.sendMessage(chatId, 'Whoops! Cant get PSI now', opts);
+            bot.sendMessage(chatId, 'Whoops! Cant get PSI now');
         }
     }
 }
