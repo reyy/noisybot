@@ -18,6 +18,10 @@ bot.on('message', function (msg) {
         var photo = 'morning.jpg';
         bot.sendPhoto(chatId, photo, { caption: "Noisy bot says HAI!" });
     }
+    else if (cmd[0] == '/greetings' || cmd[0] == '/greetings@NoisyBot') {
+        var photo = 'greetings.ogg';
+        bot.sendAudio(chatId, photo, { caption: "Noisy bot says HAI!" });
+    }
     else if (cmd[0] == '/hello' || cmd[0] == '/hello@NoisyBot') {
         bot.sendMessage(chatId, 'HAI guys!');
     }
