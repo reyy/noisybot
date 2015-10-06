@@ -19,8 +19,8 @@ bot.on('message', function (msg) {
         bot.sendPhoto(chatId, photo, { caption: "Noisy bot says HAI!" });
     }
     else if (cmd[0] == '/greetings' || cmd[0] == '/greetings@NoisyBot') {
-        var photo = 'greetings.ogg';
-        bot.sendAudio(chatId, photo, { caption: "Noisy bot says HAI!" });
+        var voice = 'greetings.ogg';
+        bot.sendVoice(chatId, voice);
     }
     else if (cmd[0] == '/hello' || cmd[0] == '/hello@NoisyBot') {
         bot.sendMessage(chatId, 'HAI guys!');
