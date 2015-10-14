@@ -1,5 +1,6 @@
 var TelegramBot = require('node-telegram-bot-api');
 var http = require('http');
+var https = require('https');
 var xpath = require('xpath');
 var dom = require('xmldom').DOMParser;
 
@@ -42,6 +43,15 @@ bot.on('message', function (msg) {
             bot.sendMessage(chatId, 'Whoops! Cant get PSI now');
         }
     }
+    else if (cmd[0] == '/bus' || cmd[0] == '/bus@NoisyBot') {
+        try {
+            loadBus(chatId);
+        }
+        catch (e) {
+            console.log(e);
+            bot.sendMessage(chatId, 'Whoops! Something went wrong :(');
+        }
+    }
 }
     );
 
@@ -77,3 +87,43 @@ var loadPSI = function (chatId) {
     });
 }
 
+var loadBus = function(chatId) {
+    var options = {
+        host: 'nextbus.comfortdelgro.com.sg',
+        port: 443,
+        path: '/eventservice.svc/Shuttleservice?busstopname=UTOWN',
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
+        rejectUnauthorized: false  
+    };
+
+    var req = https.request(options, function(res)
+    {
+        var output = '';
+        res.setEncoding('utf8');
+
+        res.on('data', function (chunk) {
+            output += chunk;
+        });
+
+        res.on('end', function() {
+            var data = JSON.parse(output);
+            var isb = data.ShuttleServiceResult.shuttles;
+            var result = "🚍*"+data.ShuttleServiceResult.caption+"*🚍";
+
+            for(var i=0; i<isb.length; i++) {
+                if(isb[i].arrivalTime != "Arr")
+                    isb[i].arrivalTime += " mins";
+                result+= "\n*" + isb[i].name + "* : " + isb[i].arrivalTime;
+            }
+            bot.sendMessage(chatId, result, { parse_mode: 'Markdown' });
+        });
+    });
+
+    req.on('error', function(err) {
+        console.log('error: ' + err.message);
+        bot.sendMessage(chatId, "Uh oh! Something went wrong :(", { parse_mode: 'Markdown' });
+    });
+
+    req.end();
+};
