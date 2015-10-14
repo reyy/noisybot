@@ -1,6 +1,7 @@
 var TelegramBot = require('node-telegram-bot-api');
 var http = require('http');
 var https = require('https');
+var request = require('request');
 var xpath = require('xpath');
 var dom = require('xmldom').DOMParser;
 
@@ -48,6 +49,17 @@ bot.on('message', function (msg) {
             loadBus(chatId);
         }
         catch (e) {
+            console.log(e);
+            bot.sendMessage(chatId, 'Whoops! Something went wrong :(');
+        }
+    }
+    else if (cmd[0] == '/echo' || cmd[0] == '/echo@NoisyBot') {
+        var text = msg.text.replace("/echo@NoisyBot","");
+        text = text.replace("/echo","");
+        try{
+            loadEcho(chatId, encodeURIComponent(text));
+        }
+        catch(e) {
             console.log(e);
             bot.sendMessage(chatId, 'Whoops! Something went wrong :(');
         }
@@ -127,3 +139,23 @@ var loadBus = function(chatId) {
 
     req.end();
 };
+
+var loadEcho = function (chatId, text) {
+    http.get({
+        host: 'api.img4me.com',
+        path: '/?text=%0A'+text+'%0A&font=impact&fcolor=FFFFFF&size=35&bcolor=FA1616&type=jpg'
+    }, function (response) {
+        var body = '';
+        response.on('data', function (d) {
+            body += d;
+            response.on('data', function (d) {
+                body += d;
+            });
+            response.on('end', function () {
+                bot.sendPhoto(chatId, request(body));
+            });
+
+        });
+
+    });
+}
