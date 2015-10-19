@@ -82,20 +82,23 @@ var loadPSI = function (chatId) {
                 body += d;
             });
             response.on('end', function () {
+            	try{
+	                var doc = new dom().parseFromString(body)
 
-                var doc = new dom().parseFromString(body)
+	                var west = xpath.select("//region[id='rWE']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
+	                var east = xpath.select("//region[id='rEA']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
+	                var central = xpath.select("//region[id='rCE']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
+	                var south = xpath.select("//region[id='rSO']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
+	                var north = xpath.select("//region[id='rNO']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
+	                var avg = xpath.select("//region[id='NRS']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
+	                //var time = xpath.select("//region[id='NRS']/record/@timestamp",doc);
+	                var result = "😷*[Current 3Hr PSI]*😷\nWest : " + west[0].nodeValue + "\nEast : " + east[0].nodeValue + "\nSouth : " + south[0].nodeValue + "\nNorth : " + north[0].nodeValue + "\nCentral : " + central[0].nodeValue + "\n\nNational Avg : " + avg[0].nodeValue;
+	                result += "\n\n_Note: This is the 3 hour average PSI. For 1 hour PSI (calculated from NEA data), type /psi_"
 
-                var west = xpath.select("//region[id='rWE']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
-                var east = xpath.select("//region[id='rEA']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
-                var central = xpath.select("//region[id='rCE']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
-                var south = xpath.select("//region[id='rSO']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
-                var north = xpath.select("//region[id='rNO']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
-                var avg = xpath.select("//region[id='NRS']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
-                //var time = xpath.select("//region[id='NRS']/record/@timestamp",doc);
-                var result = "😷*[Current 3Hr PSI]*😷\nWest : " + west[0].nodeValue + "\nEast : " + east[0].nodeValue + "\nSouth : " + south[0].nodeValue + "\nNorth : " + north[0].nodeValue + "\nCentral : " + central[0].nodeValue + "\n\nNational Avg : " + avg[0].nodeValue;
-                result += "\n\n_Note: This is the 3 hour average PSI. For 1 hour PSI (calculated from NEA data), type /psi_"
-
-                bot.sendMessage(chatId, result, { parse_mode: 'Markdown' });
+	                bot.sendMessage(chatId, result, { parse_mode: 'Markdown' });
+	            } catch (e) {
+	            	bot.sendMessage(chatId, "*Whoop!* 😳 Unable to get PSI now. Please try again later or use /psi to get the 1 hour PSI.", { parse_mode: 'Markdown' });
+	            }
             });
 
         });
