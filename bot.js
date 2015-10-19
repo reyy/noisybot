@@ -38,7 +38,10 @@ bot.on('message', function (msg) {
     }
     else if (cmd[0] == '/psi' || cmd[0] == '/psi@NoisyBot') {
         try {
-            loadPSI(chatId);
+    		if(cmd[1] == '3hr' || cmd[1] == '3Hr')
+            	loadPSI(chatId);
+            else
+            	load1HourPSI(chatId);
         }
         catch (e) {
             bot.sendMessage(chatId, 'Whoops! Cant get PSI now');
@@ -90,6 +93,7 @@ var loadPSI = function (chatId) {
                 var avg = xpath.select("//region[id='NRS']/record/reading[@type='NPSI_PM25_3HR']/@value", doc)
                 //var time = xpath.select("//region[id='NRS']/record/@timestamp",doc);
                 var result = "😷*[Current 3Hr PSI]*😷\nWest : " + west[0].nodeValue + "\nEast : " + east[0].nodeValue + "\nSouth : " + south[0].nodeValue + "\nNorth : " + north[0].nodeValue + "\nCentral : " + central[0].nodeValue + "\n\nNational Avg : " + avg[0].nodeValue;
+                result += "\n\n_Note: This is the 3 hour average PSI. For 1 hour PSI (calculated from NEA data), type /psi_"
 
                 bot.sendMessage(chatId, result, { parse_mode: 'Markdown' });
             });
@@ -98,6 +102,43 @@ var loadPSI = function (chatId) {
 
     });
 }
+
+var load1HourPSI = function(chatId) {
+    var options = {
+        host: 'spreadsheets.google.com',
+        port: 443,
+        path: '/feeds/list/1iihowhAfN1j2AqMX31gYxjvmg0P477ZPf6FTVKmBxWU/5/public/values?alt=json',
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
+        rejectUnauthorized: false  
+    };
+
+    var req = https.request(options, function(res)
+    {
+        var output = '';
+        res.setEncoding('utf8');
+
+        res.on('data', function (chunk) {
+            output += chunk;
+        });
+
+        res.on('end', function() {
+            var data = JSON.parse(output);
+            var psi = data.feed.entry[0];
+            var result = "😷*[Current Calculated 1Hr PSI]*😷\nWest : " + psi['gsx$west']['$t'] + "\nEast : " + psi['gsx$east']['$t'] + "\nSouth : " + psi['gsx$south']['$t'] + "\nNorth : " + psi['gsx$north']['$t'] + "\nCentral : " + psi['gsx$central']['$t'] + "\n\nNational Avg : " + psi['gsx$average']['$t'];
+
+            result += "\n\n_Note: This is the 1 hour PSI (calculated from NEA data). For 3 hour average PSI, type /psi 3hr_";
+            bot.sendMessage(chatId, result, { parse_mode: 'Markdown' });
+        });
+    });
+
+    req.on('error', function(err) {
+        console.log('error: ' + err.message);
+        bot.sendMessage(chatId, "Uh oh! Something went wrong :(", { parse_mode: 'Markdown' });
+    });
+
+    req.end();
+};
 
 var loadBus = function(chatId) {
     var options = {
