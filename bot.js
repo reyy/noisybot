@@ -3,10 +3,6 @@ var http = require('http');
 var https = require('https');
 var request = require('request');
 
-const BOT_FILES = {
-	MORNING : 'AgADBQADu6cxG6gBDgdA2w9yAugWKTiyszIABDDnqj0Hlyn6bfEAAgI',
-	GREETINGS : 'AwADBQADBAADqAEOBzK8hOwVpUFpAg'
-}
 
 var token = process.env.OPENSHIFT_TELEGRAM_TOKEN;
 var port = process.env.OPENSHIFT_NODEJS_PORT;
@@ -15,29 +11,25 @@ var domain = process.env.OPENSHIFT_APP_DNS;
 
 var bot = new TelegramBot(token, { webHook: { port: port, host: host } });
 bot.setWebHook(domain + ':443/bot' + token);
-const getPsi   = require('./commands/psi')(bot);
 
+const getPrintText  = require('./commands/getPrintText')(bot);
+const getTextToImg  = require('./commands/textToImg')(bot);
+const getMisc  		= require('./commands/misc')(bot);
+const getPsi   		= require('./commands/psi')(bot);
+
+bot.onText(/\/echo(@NoisyBot)?( .+)?/,getTextToImg);
 bot.onText(/\/psi(@NoisyBot)?( .+)?/, getPsi);
+
+bot.onText(/\/greetings(@NoisyBot)?/, getMisc.greetings);
+bot.onText(/\/morning(@NoisyBot)?/, getMisc.morning);
+bot.onText(/\/hello(@NoisyBot)?/, getMisc.hello);
+bot.onText(/\/help(@NoisyBot)?/, getMisc.help);
+bot.onText(/\/start(@NoisyBot)?/, getMisc.help);
 
 bot.on('message', function (msg) {
     var cmd = msg.text.split(" ");
     var chatId = msg.chat.id;
-    if (cmd[0] == '/morning' || cmd[0] == '/morning@NoisyBot') {
-        bot.sendPhoto(chatId, BOT_FILES.MORNING, { caption: "Noisy bot says Good Morning!"});
-    }
-    else if (cmd[0] == '/greetings' || cmd[0] == '/greetings@NoisyBot') {
-        bot.sendAudio(chatId, BOT_FILES.GREETINGS);
-    }
-    else if (cmd[0] == '/hello' || cmd[0] == '/hello@NoisyBot') {
-        bot.sendMessage(chatId, 'HAI guys!');
-    }
-    else if (cmd[0] == '/help' || cmd[0] == '/help@NoisyBot' || cmd[0] == '/start') {
-        var opts = {
-            reply_to_message_id: msg.message_id
-        };
-        bot.sendMessage(chatId, 'Type / to see the commands available! 😁');
-    }
-    else if (cmd[0] == '/bus' || cmd[0] == '/bus@NoisyBot') {
+    if (cmd[0] == '/bus' || cmd[0] == '/bus@NoisyBot') {
         try {
             loadBus(chatId);
         }
@@ -46,19 +38,7 @@ bot.on('message', function (msg) {
             bot.sendMessage(chatId, 'Whoops! Something went wrong :(');
         }
     }
-    else if (cmd[0] == '/echo' || cmd[0] == '/echo@NoisyBot') {
-        var text = msg.text.replace("/echo@NoisyBot","");
-        text = text.replace("/echo","");
-        try{
-            loadEcho(chatId, encodeURIComponent(text));
-        }
-        catch(e) {
-            console.log(e);
-            bot.sendMessage(chatId, 'Whoops! Something went wrong :(');
-        }
-    }
-}
-    );
+});
 
 
 
@@ -103,22 +83,3 @@ var loadBus = function(chatId) {
     req.end();
 };
 
-var loadEcho = function (chatId, text) {
-    http.get({
-        host: 'api.img4me.com',
-        path: '/?text=%0A'+text+'%0A&font=impact&fcolor=FFFFFF&size=35&bcolor=FA1616&type=jpg'
-    }, function (response) {
-        var body = '';
-        response.on('data', function (d) {
-            body += d;
-            response.on('data', function (d) {
-                body += d;
-            });
-            response.on('end', function () {
-                bot.sendPhoto(chatId, request(body));
-            });
-
-        });
-
-    });
-}
