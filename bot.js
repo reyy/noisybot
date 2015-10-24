@@ -16,11 +16,11 @@ var domain = process.env.OPENSHIFT_APP_DNS;
 var bot = new TelegramBot(token, { webHook: { port: port, host: host } });
 bot.setWebHook(domain + ':443/bot' + token);
 
-const getPsi   		= require('./commands/psi')(bot);
 const getPrintText  = require('./commands/getPrintText')(bot);
+const getPsi   		= require('./commands/psi')(bot);
 
+bot.onText(/\/echo(@NoisyBot)?( .+)?/,getPrintText);
 bot.onText(/\/psi(@NoisyBot)?( .+)?/, getPsi);
-bot.onTest(/\/echo(@NoisyBot)?( .+)?/,getPrintText);
 
 bot.on('message', function (msg) {
     var cmd = msg.text.split(" ");
