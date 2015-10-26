@@ -13,12 +13,12 @@ const getMisc  		= require('./commands/misc')(bot);
 const getPsi   		= require('./commands/psi')(bot);
 const getBus   		= require('./commands/bus')(bot);
 
-bot.onText(/\/echo(@NoisyBot)?( .+)?/,getTextToImg);
-bot.onText(/\/psi(@NoisyBot)?( .+)?/, getPsi);
-bot.onText(/\/bus(@NoisyBot)?/, getBus);
+bot.onText(/\/echo(@NoisyBot)?( .+)?$/,getTextToImg);
+bot.onText(/\/psi(@NoisyBot)?( .+)?$/, getPsi);
+bot.onText(/\/bus(@NoisyBot)?( .+)?$/, getBus);
 
-bot.onText(/\/greetings(@NoisyBot)?/, getMisc.greetings);
-bot.onText(/\/morning(@NoisyBot)?/, getMisc.morning);
-bot.onText(/\/hello(@NoisyBot)?/, getMisc.hello);
-bot.onText(/\/help(@NoisyBot)?/, getMisc.help);
-bot.onText(/\/start(@NoisyBot)?/, getMisc.help);
+bot.onText(/\/greetings(@NoisyBot)?$/, getMisc.greetings);
+bot.onText(/\/morning(@NoisyBot)?$/, getMisc.morning);
+bot.onText(/\/hello(@NoisyBot)?$/, getMisc.hello);
+bot.onText(/\/help(@NoisyBot)?$/, getMisc.help);
+bot.onText(/\/start(@NoisyBot)?$/, getMisc.help);
