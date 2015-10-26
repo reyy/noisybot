@@ -38,7 +38,7 @@ var fetchIsbTiming = function(chatId, bot, code) {
                     isb[i].arrivalTime += " mins";
                 result+= "\n*" + isb[i].name + "* : " + isb[i].arrivalTime;
             }
-            bot.sendMessage(chatId, result, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, result, { parse_mode: 'Markdown', reply_markup: JSON.stringify({"hide_keyboard": true}) });
         }
         catch(e)
         {
@@ -51,7 +51,6 @@ var showBusMenu = function(msg, bot) {
     console.log("HERE")
     try{
     var opts = {
-        ReplyKeyboardHide: {},
         reply_to_message_id: msg.message_id,
         reply_markup: JSON.stringify({
             "keyboard": 
