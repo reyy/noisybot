@@ -12,6 +12,6 @@ var loadEcho = function (chatId, text, bot) {
         if (!error && response.statusCode == 200)
             bot.sendPhoto(chatId, request(body));
         else
-            bot.sendText(chatId, "Whoops! Something went wrong :/");
+            bot.sendMessage(chatId, "Whoops! Something went wrong :/");
     })
 }

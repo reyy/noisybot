@@ -1,32 +1,22 @@
-const https = require('https');
+var request = require('request').defaults({
+  strictSSL: false,
+  rejectUnauthorized: false
+});
 
 module.exports = function (bot) {
     return function (msg, match) {
         loadBus(msg.chat.id, bot);
+        
     }
 };
 
 var loadBus = function(chatId, bot) {
-    var options = {
-        host: 'nextbus.comfortdelgro.com.sg',
-        port: 443,
-        path: '/eventservice.svc/Shuttleservice?busstopname=UTOWN',
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'},
-        rejectUnauthorized: false  
-    };
+    request('https://nextbus.comfortdelgro.com.sg/eventservice.svc/Shuttleservice?busstopname=UTOWN',
+    function (error, response, body) {
 
-    var req = https.request(options, function(res)
-    {
-        var output = '';
-        res.setEncoding('utf8');
-
-        res.on('data', function (chunk) {
-            output += chunk;
-        });
-
-        res.on('end', function() {
-            var data = JSON.parse(output);
+        if (!error && response.statusCode == 200)
+        {
+            var data = JSON.parse(body);
             var isb = data.ShuttleServiceResult.shuttles;
             var result = "🚍*"+data.ShuttleServiceResult.caption+"*🚍";
 
@@ -36,13 +26,8 @@ var loadBus = function(chatId, bot) {
                 result+= "\n*" + isb[i].name + "* : " + isb[i].arrivalTime;
             }
             bot.sendMessage(chatId, result, { parse_mode: 'Markdown' });
-        });
+        }
+        else
+            bot.sendMessage(chatId, "Whoops! Something went wrong :/");
     });
-
-    req.on('error', function(err) {
-        console.log('error: ' + err.message);
-        bot.sendMessage(chatId, "Uh oh! Something went wrong :(", { parse_mode: 'Markdown' });
-    });
-
-    req.end();
 };
