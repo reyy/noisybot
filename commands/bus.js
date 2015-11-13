@@ -12,7 +12,30 @@ const BUSSTOPS = {
     "COM2"          : "COM2",
     "COMPUTING"     : "COM2",
     "KRMRT"         : "KR-MRT",
-    "OPPKRMRT"      : "KR-MRT-OPP"
+    "OPPKRMRT"      : "KR-MRT-OPP",
+    "AS7"           : "AS7",
+    "BIZ2"          : "BIZ2",
+    "BGMRT"         : "BG-MRT",
+    "BTC"           : "BUKITTIMAH-BTC2",
+    "OPPBGMRT"      : "CGH",
+    "LT13"          : "LT13",
+    "OPPVENTUS"     : "LT13",
+    "MUSEUM"        : "MUSEUM",
+    "BLKEA"         : "BLK-EA-OPP",
+    "i3"            : "HSSML-OPP",
+    "OPPBIZ2"       : "HSSML-OPP",
+    "NUSS"          : "NUSS-OPP",
+    "OPPUHALL"      : "UHALL-OPP",
+    "OPPUHC"        : "STAFFCLUB-OPP",
+    "OPPYIH"        : "YIH-OPP",
+    "PGPR"          : "PGP",
+    "PGP"           : "PGPT",
+    "RH"            : "RAFFLES",
+    "UHALL"         : "UHALL",
+    "UHC"           : "STAFFCLUB",
+    "VENTUS"        : "LT13-OPP",
+    "OPPLT13"       : "LT13-OPP",
+    "YIH"           : "YIH"
 };
 
 module.exports = function (bot) {
@@ -55,9 +78,9 @@ var showBusMenu = function(msg, bot) {
         reply_markup: JSON.stringify({
             "keyboard": 
                 [["/bus UTown", "/bus computing"], 
-                ["/bus clb", "/bus oppClb"], 
-                ["/bus science", "/bus oppScience"], 
-                ["/bus KRMRT", "/bus oppKRMRT"]], 
+                ["/bus ventus", "/bus oppClb"], 
+                ["/bus i3", "/bus oppScience"], 
+                ["/bus KRMRT", "/bus btc"]], 
             "one_time_keyboard": true
             //"force_reply": true
         })
