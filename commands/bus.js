@@ -22,7 +22,7 @@ const BUSSTOPS = {
     "OPPVENTUS"     : "LT13",
     "MUSEUM"        : "MUSEUM",
     "BLKEA"         : "BLK-EA-OPP",
-    "i3"            : "HSSML-OPP",
+    "I3"            : "HSSML-OPP",
     "OPPBIZ2"       : "HSSML-OPP",
     "NUSS"          : "NUSS-OPP",
     "OPPUHALL"      : "UHALL-OPP",
